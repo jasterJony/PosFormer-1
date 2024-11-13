@@ -112,7 +112,7 @@ class Batch:
 
     def to(self, device) -> "Batch":       
         return Batch(
-            img_bases=self.img_bases,
+            img_bases=self.img_bases,#batch xun lian训练
             imgs=self.imgs.to(device),
             mask=self.mask.to(device),
             indices=self.indices,

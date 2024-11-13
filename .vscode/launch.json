@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+
+        {
+            "python": "C:/Users/lenovo/.conda/envs/openmmlab/python.exe",
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": ["--config", "config.yaml"],
+        }
+    ]
+}

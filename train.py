@@ -21,10 +21,9 @@ class MyLightningCLI(LightningCLI):
         self.trainer.callbacks.extend([checkpoint])
         self.trainer.logger = logger
         self.trainer.enable_model_summary = True
-
-cli = MyLightningCLI(
+if __name__ == '__main__':
+    cli = MyLightningCLI(
     LitPosFormer,
     CROHMEDatamodule,
     save_config_overwrite=True,
-    trainer_defaults={"plugins": DDPPlugin(find_unused_parameters=True)},
 )

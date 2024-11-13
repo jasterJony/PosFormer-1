@@ -81,7 +81,7 @@ class ImgPosEnc(pl.LightningModule):
         torch.Tensor
             [b, h, w, d]
         """
-        not_mask = ~mask
+        not_mask = ~mask#x torch.Size([8, 6, 10, 256])
         y_embed = not_mask.cumsum(1, dtype=torch.float32)
         x_embed = not_mask.cumsum(2, dtype=torch.float32)
         if self.normalize:

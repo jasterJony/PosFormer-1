@@ -108,7 +108,7 @@ class AttentionRefinementModule(nn.Module):
         cov = cov.masked_fill(mask, 0.0)
         cov = self.proj(cov)
 
-        cov = self.post_norm(cov, mask)
+        cov = self.post_norm(cov, mask)#torch.Size([32, 8, 4, 4])
 
         cov = rearrange(cov, "(b t) n h w -> (b n) t (h w)", t=t)
         return cov

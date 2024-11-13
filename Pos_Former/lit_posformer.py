@@ -72,7 +72,7 @@ class LitPosFormer(pl.LightningModule):
         FloatTensor
             [2b, l, vocab_size]
         """
-        return self.model(img, img_mask, tgt, logger)
+        return self.model(img, img_mask, tgt, logger) #tgt 16 6
 
     def training_step(self, batch: Batch, _):      
         tgt, out = to_bi_tgt_out(batch.indices, self.device)
@@ -80,14 +80,14 @@ class LitPosFormer(pl.LightningModule):
         tgt_list=tgt.cpu().numpy().tolist()
         layer_num , final_pos=label_make_muti.out2layernum_and_pos(tgt_list)
         layer_num_tensor=torch.LongTensor(layer_num)   #[2b,l,5]
-        final_pos_tensor=torch.LongTensor(final_pos)   #[2b,l,6]
-        layer_num_tensor=layer_num_tensor.cuda()
-        final_pos_tensor=final_pos_tensor.cuda()  
+        final_pos_tensor=torch.LongTensor(final_pos)   #[2b,l,6]训练logger
+        #layer_num_tensor=layer_num_tensor.cuda()
+        #final_pos_tensor=final_pos_tensor.cuda()  
         loss, layer_loss, pos_loss  = ce_loss_all(out_hat, out,out_hat_layer,layer_num_tensor,out_hat_pos,final_pos_tensor)
         self.log("train_loss", loss, logger=True, on_step=False, on_epoch=True, sync_dist=True,prog_bar=True)
         self.log("train_loss_pos",pos_loss, logger=True, on_step=False, on_epoch=True,prog_bar=True, sync_dist=True)
         self.log("train_loss_layernum",layer_loss, logger=True,on_step=False, on_epoch=True, sync_dist=True,prog_bar=True)
-        loss = (loss+0.25*layer_loss+0.25*pos_loss)/1.5
+        loss = (loss+0.25*layer_loss+0.25*pos_loss)/1.5 #改变损失函数 
         return loss
 
     def validation_step(self, batch: Batch, _):
@@ -98,8 +98,8 @@ class LitPosFormer(pl.LightningModule):
         layer_num , final_pos=label_make_muti.out2layernum_and_pos(tgt_list)
         layer_num_tensor=torch.LongTensor(layer_num)   #[2b,l,5]
         final_pos_tensor=torch.LongTensor(final_pos)   #[2b,l,6]
-        layer_num_tensor=layer_num_tensor.cuda()
-        final_pos_tensor=final_pos_tensor.cuda()  
+        #layer_num_tensor=layer_num_tensor.cuda()
+        #final_pos_tensor=final_pos_tensor.cuda()  
         
         loss,layer_loss,pos_loss  = ce_loss_all(out_hat, out,out_hat_layer,layer_num_tensor,out_hat_pos,final_pos_tensor)
 

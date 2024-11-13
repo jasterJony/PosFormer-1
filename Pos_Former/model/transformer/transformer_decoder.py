@@ -24,7 +24,7 @@ class TransformerDecoder(nn.Module):
     ):
         super(TransformerDecoder, self).__init__()
         self.layers = _get_clones(decoder_layer, num_layers)
-        self.num_layers = num_layers
+        self.num_layers = num_layers#3
         self.norm = norm
 
         self.arm = arm
@@ -116,7 +116,7 @@ class TransformerDecoderLayer(nn.Module):
             tgt, tgt, tgt, attn_mask=tgt_mask, key_padding_mask=tgt_key_padding_mask
         )[0]
         tgt = tgt + self.dropout1(tgt2)
-        tgt = self.norm1(tgt)
+        tgt = self.norm1(tgt)#torch.Size([4, 8, 256])
         tgt2, attn = self.multihead_attn(
             tgt,
             memory,
@@ -126,9 +126,10 @@ class TransformerDecoderLayer(nn.Module):
             key_padding_mask=memory_key_padding_mask,
             tgt_vocab=tgt_vocab,
         )
-        tgt = tgt + self.dropout2(tgt2)
+        tgt = tgt + self.dropout2(tgt2) #4 8 256 ATTN torch.Size([64, 4, 16])
         tgt = self.norm2(tgt)
         tgt2 = self.linear2(self.dropout(self.activation(self.linear1(tgt))))
         tgt = tgt + self.dropout3(tgt2)
         tgt = self.norm3(tgt)
+        
         return tgt, attn
